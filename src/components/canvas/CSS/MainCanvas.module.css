@@ -1,0 +1,14 @@
+.container {
+    height:90vh;
+    width: 100vw;
+    position: relative;
+}
+
+.SVGMain{
+    background-color: black;
+}
+
+.lineStoke {
+    stroke: black;
+    stroke-width: 1;
+}
