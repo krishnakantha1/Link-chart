@@ -1,10 +1,12 @@
-import React from 'react'
+import React,{ useContext } from 'react'
 
 import styles from './CSS/Card.module.css'
 
+import { ActiveCardProvider } from './LineChartContainer'
 
+export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
+  const { setActiveCard } = useContext(ActiveCardProvider)
 
-export const Card = ({x,y,text,idx,upsertStartDragging}) => {
     const startDragging = (e)=>{
         e.preventDefault()
         e.stopPropagation()
@@ -13,11 +15,19 @@ export const Card = ({x,y,text,idx,upsertStartDragging}) => {
 
     }
 
+    const handleClick = (e)=>{
+      e.preventDefault()
+      e.stopPropagation()
+
+      setActiveCard(idx)
+    }
+
   return (
     <g transform={`translate(${x},${y})`}>
-    <foreignObject  height="100" width= "200" onMouseDown={startDragging}>
+    <foreignObject  height="100" width= "200" onMouseDown={startDragging} onDoubleClick={handleClick}>
             <div className={styles.card}>
-              
+              <p>{title}</p>
+              <p>{description}</p>
             </div>
     </foreignObject>
     </g>

@@ -24,7 +24,6 @@ h1::after{
 .controllerForm{
     display: flex;
     position: relative;
-    margin: 50px 0;
     flex-direction: column;
 }
 
@@ -88,4 +87,18 @@ h1::after{
     margin-right: 5%;
     color: rgb(212, 81, 19);
     font-weight: bolder;
+}
+
+
+.cardContainer{
+    position: relative;
+    width: 100%;
+}
+
+.cardContainer .card{
+    padding: 5px 10px;
+    margin: 15px 10px;
+    background-color: rgb(221, 249, 193);
+    border-radius: 5px;
+    border: 1px solid rgb(249, 160, 63);
 }

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Card } from './Card'
 
 import styles from "./CSS/MainSVG.module.css"
 import { Line } from './Line'
 
+import { ActiveCardProvider } from './LineChartContainer'
 
 const getMousePositionOnSVG = (e,svg)=>{
   const ctm = svg.getScreenCTM()
@@ -13,23 +14,10 @@ const getMousePositionOnSVG = (e,svg)=>{
   }
 }
 
-const createSVGState = ()=>{
-    let c1x = Math.random()*200
-    let c1y = Math.random()*200
-    let c1text = "card 1"
+export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, gMatrix, setGMatrix }) => {
 
-    let c2x = Math.random()*200
-    let c2y = Math.random()*200
-    let c2text = "card 2"
-    
-    return [{x:c1x,y:c1y,val:c1text},{x:c2x,y:c2y,val:c2text}]
-}
-
-export const MainSVG = ({wHeight,wWidth}) => {
-
-  //svg dimension data and calculations
-  const [svgDim,setSvgDim] = useState({height : 0, width : 0})
-  const [gMatrix, setGMatrix] = useState([1,0,0,1,0,0])
+  const { activeCard,setActiveCard } = useContext(ActiveCardProvider)
+  
   const svgContainerRef = useRef(null)
 
   useEffect(()=>{
@@ -37,11 +25,8 @@ export const MainSVG = ({wHeight,wWidth}) => {
     const {width,height}  = svgContainerRef.current.getBoundingClientRect()
     setSvgDim({width,height})
 
-  },[wHeight,wWidth])
-
-  //Card data
-  const [cards,setcards] = useState(createSVGState())
-
+  },[wHeight,wWidth,setSvgDim])
+  
   //draggable info
   const [draggableState,setDraggableState] = useState({
     draggble: false,
@@ -77,7 +62,7 @@ export const MainSVG = ({wHeight,wWidth}) => {
 
     //card move
     if(draggableState.draggble && draggableState.draggableElementId!==-1){
-      setcards(prev=>{
+      setCards(prev=>{
         const {x,y} = getMousePositionOnSVG(e,svg.current)
 
         const tempCards = [...prev]
@@ -174,6 +159,10 @@ export const MainSVG = ({wHeight,wWidth}) => {
     <div ref={svgContainerRef} className={styles.container}>
       <svg 
         className={styles.SVGMain} height={svgDim.height} width={svgDim.width} 
+        onDoubleClick = {(e)=>{ 
+          if(activeCard===-1) return
+          setActiveCard(-1)
+         }}
         onMouseDown={translate}
         onMouseMove={tryDragging}
         onMouseUp={stopDragging}
@@ -181,10 +170,27 @@ export const MainSVG = ({wHeight,wWidth}) => {
         onWheel={zoom}
       >
         <g ref={svg} transform={`matrix(${gMatrix.join(" ")})`}>
-          <Line x1={cards[0].x} y1={cards[0].y} x2={cards[1].x} y2={cards[1].y}/>
+          {
+            cards.map((card,_,card_self)=>{
+              if(!card.linkTo){
+                return null
+              }
+              return card.linkTo.map((linkID,_,link_self) => (
+                <Line key={Math.random()} x1={card.x} y1={card.y} x2={card_self[linkID].x} y2={card_self[linkID].y}/>
+              ))
+            })
+          }
+          
           {
             cards.map((card,i)=>(
-              <Card key={i} x={card.x} y={card.y} text={card.val} idx={i} upsertStartDragging={f}/>
+              <Card 
+                key={i} 
+                x={card.x} 
+                y={card.y} 
+                title={card.title} 
+                description={card.description}
+                idx={i} 
+                upsertStartDragging={f}/>
             ))
           }
         
