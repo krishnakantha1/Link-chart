@@ -76,7 +76,7 @@ h1::after{
     width: 100%;
     margin: 15px 0px 15px 0;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .inputButtonRight button{
