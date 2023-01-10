@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import "./App.css"
 
-import MainCanvas from './components/canvas/MainCanvas'
+import { LineChartContainer } from './components/LinkChart/LineChartContainer'
 
 const App = ()=>{
   const [windowDim,setWindowDim] = useState([window.innerHeight,window.innerWidth]);
@@ -15,8 +15,8 @@ const App = ()=>{
   },[])
 
   return (
-    <MainCanvas wHeight={windowDim[0]} wWidth={windowDim[1]}/>
+    <LineChartContainer wHeight={windowDim[0]} wWidth={windowDim[1]}/>
   )
 }
-
+//813405-d45113-f9a03f-f8dda4-ddf9c1
 export default App

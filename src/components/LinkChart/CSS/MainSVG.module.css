@@ -1,0 +1,7 @@
+.container {
+    height:100%;
+    position: relative;
+    /* flex-grow: 1; */
+    width:80vw;
+    background-color: rgb(248, 221, 164);
+}

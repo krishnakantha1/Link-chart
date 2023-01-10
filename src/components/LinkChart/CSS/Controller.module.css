@@ -1,0 +1,91 @@
+.container{
+    height: 100%;
+    width:20vw;
+    background-color: rgb(212, 81, 19);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+h1{
+    text-align: center;
+    color: white;
+    position: relative;
+}
+h1::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left:20%;
+    height: 3px;
+    width: 60%;
+    background-color: white;
+}
+
+.controllerForm{
+    display: flex;
+    position: relative;
+    margin: 50px 0;
+    flex-direction: column;
+}
+
+.inputText{
+    position: relative;
+    width: 100%;
+    margin: 15px 0 15px 0;
+    display: flex;
+    justify-content: center;
+}
+.inputText .labelHolder{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+}
+.inputText label{
+    position: absolute;
+    left : 10%;
+    top : 5px;
+    padding: 2px 5px;
+    background-color: white;
+    pointer-events: none;
+    color: rgba(145, 143, 143, 0.5);
+    transition: all 0.15s ease-out;
+}
+.inputText :is(input[type=text],textarea){
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+    border-style: none;
+    outline: none;
+}
+
+.inputText textarea{
+    resize: vertical;
+    min-height: 100px;
+}
+
+.inputText:focus-within label, .inputText :is(input[type=text],textarea):valid + .labelHolder label{
+    
+    border-radius: 5px;
+    
+    top:-15px;
+}
+
+.inputButtonRight{
+    position: relative;
+    width: 100%;
+    margin: 15px 0px 15px 0;
+    display: flex;
+    justify-content: end;
+}
+
+.inputButtonRight button{
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-style: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 5%;
+    color: rgb(212, 81, 19);
+    font-weight: bolder;
+}

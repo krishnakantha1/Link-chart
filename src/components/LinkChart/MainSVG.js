@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card } from './Card'
 
-import styles from "./CSS/MainCanvas.module.css"
+import styles from "./CSS/MainSVG.module.css"
 import { Line } from './Line'
 
 
@@ -25,7 +25,7 @@ const createSVGState = ()=>{
     return [{x:c1x,y:c1y,val:c1text},{x:c2x,y:c2y,val:c2text}]
 }
 
-const MainCanvas = ({wHeight,wWidth}) => {
+export const MainSVG = ({wHeight,wWidth}) => {
 
   //svg dimension data and calculations
   const [svgDim,setSvgDim] = useState({height : 0, width : 0})
@@ -193,5 +193,3 @@ const MainCanvas = ({wHeight,wWidth}) => {
     </div>
   )
 }
-
-export default MainCanvas

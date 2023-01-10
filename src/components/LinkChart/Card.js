@@ -1,5 +1,7 @@
 import React from 'react'
 
+import styles from './CSS/Card.module.css'
+
 
 
 export const Card = ({x,y,text,idx,upsertStartDragging}) => {
@@ -13,13 +15,9 @@ export const Card = ({x,y,text,idx,upsertStartDragging}) => {
 
   return (
     <g transform={`translate(${x},${y})`}>
-    <foreignObject  height="60" width= "200" onMouseDown={startDragging}>
-            <div style={{
-              backgroundColor:"rgb(177, 177, 177)",
-              width:"100%",
-              height:"100%"
-            }}>
-              <p>{text}</p>
+    <foreignObject  height="100" width= "200" onMouseDown={startDragging}>
+            <div className={styles.card}>
+              
             </div>
     </foreignObject>
     </g>
