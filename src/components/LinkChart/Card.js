@@ -7,7 +7,7 @@ import styles from './CSS/Card.module.css'
 import { ActiveCardProvider } from './LineChartContainer'
 
 export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
-  const { setActiveCard } = useContext(ActiveCardProvider)
+  const { setActiveCard,linkExistingCard } = useContext(ActiveCardProvider)
 
     const startDragging = (e)=>{
         e.preventDefault()
@@ -29,8 +29,17 @@ export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
     <foreignObject  
       height="100" width= "200" 
       onMouseDown={startDragging} 
-      onDoubleClick={handleClick}>
-            <div className={styles.card}>
+      onDoubleClick={handleClick}
+      onDrop={(e)=>{
+        const parent = e.dataTransfer.getData('parentNode')
+        linkExistingCard(parent,idx)
+        e.preventDefault()
+      }}
+      onDragOver={(e)=>{e.preventDefault()}}
+      >
+            <div className={styles.card}
+              
+            >
               <div className={styles.cardPadding}>
                 <p className={styles.title}>{title}</p>
               </div>
@@ -38,7 +47,11 @@ export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
                 <p className={styles.description}>{description}</p>
               </div>
               <div className={styles.anchorPadding}>
-                <img src={anchor} alt="anchor" onMouseDown={(e)=>{e.stopPropagation()}}  draggable="true"/>
+                <img src={anchor} alt="anchor"  draggable="true" 
+                 onMouseDown={(e)=>{e.stopPropagation()}} 
+                 onMouseMove={(e)=>{e.stopPropagation()}}
+                 onDragStart={(e)=>{e.dataTransfer.setData('parentNode',idx)}}
+                  />
               </div>
             </div>
     </foreignObject>

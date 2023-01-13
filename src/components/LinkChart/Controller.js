@@ -78,7 +78,7 @@ const CardInfo = ({ idx, createNewCard })=>{
       </div>
       {
         cards[idx].linkTo.map((nextIdx)=>(
-          <SimpleCard idx={nextIdx}/>
+          <SimpleCard key={nextIdx} idx={nextIdx}/>
         ))
       }
     </div>

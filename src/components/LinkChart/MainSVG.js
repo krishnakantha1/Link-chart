@@ -175,7 +175,7 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
               if(!card.linkTo){
                 return null
               }
-              return card.linkTo.map((linkID,_,link_self) => (
+              return card.linkTo.map((linkID,) => (
                 <Line key={Math.random()} x1={card.x} y1={card.y} x2={card_self[linkID].x} y2={card_self[linkID].y}/>
               ))
             })

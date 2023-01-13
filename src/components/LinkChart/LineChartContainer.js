@@ -26,6 +26,16 @@ export const LineChartContainer = ( {wHeight,wWidth} ) => {
 
   //active selected card
   const [activeCard,setActiveCard] = useState(-1)
+
+  const linkExistingCard = (parent,child)=>{
+    setCards(prev=>{
+      const newCards = [...prev]
+
+      newCards[parent].linkTo = [child,...newCards[parent].linkTo]
+
+      return newCards
+    })
+  }
   
 
   const createNewCard = (title,description,idx)=>{
@@ -46,7 +56,8 @@ export const LineChartContainer = ( {wHeight,wWidth} ) => {
 
   return (
     <div className={styles.container}>
-      <ActiveCardProvider.Provider value={{activeCard,setActiveCard,cards,setCards}}>
+      <ActiveCardProvider.Provider value={{activeCard,setActiveCard,cards,setCards,
+      linkExistingCard}}>
         <MainSVG 
           wHeight={wHeight} 
           wWidth={wWidth} 
