@@ -2,8 +2,10 @@ import React, { useState,createContext } from 'react'
 
 import styles from './CSS/LineChartContainer.module.css'
 
+import { LinkChartCentralProvider } from './LinkChartCentralProvider'
 import { MainSVG } from './MainSVG'
 import { Controller } from './Controller'
+
 
 /*card {
   id : string
@@ -56,19 +58,21 @@ export const LineChartContainer = ( {wHeight,wWidth} ) => {
 
   return (
     <div className={styles.container}>
-      <ActiveCardProvider.Provider value={{activeCard,setActiveCard,cards,setCards,
-      linkExistingCard}}>
-        <MainSVG 
-          wHeight={wHeight} 
-          wWidth={wWidth} 
-          cards={cards} 
-          setCards={setCards} 
-          svgDim={svgDim} 
-          setSvgDim={setSvgDim}
-          gMatrix={gMatrix}
-          setGMatrix={setGMatrix}/>
-        <Controller createNewCard={createNewCard}/>
-      </ActiveCardProvider.Provider>
+      <LinkChartCentralProvider>
+        <ActiveCardProvider.Provider value={{activeCard,setActiveCard,cards,setCards,
+        linkExistingCard}}>
+          <MainSVG 
+            wHeight={wHeight} 
+            wWidth={wWidth} 
+            cards={cards} 
+            setCards={setCards} 
+            svgDim={svgDim} 
+            setSvgDim={setSvgDim}
+            gMatrix={gMatrix}
+            setGMatrix={setGMatrix}/>
+          <Controller createNewCard={createNewCard}/>
+        </ActiveCardProvider.Provider>
+      </LinkChartCentralProvider>
     </div>
     
   )
