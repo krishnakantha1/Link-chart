@@ -69,7 +69,13 @@ const CardInfo = ({ idx, createNewCard })=>{
   return (
     <div>
       <SimpleCard idx={idx}/>
+      <div className={styles.cardInfoPrompt}> 
+        <p>Create a linking card</p>
+      </div>
       <CreateCardForm createSubCard={true} handleChange={handleChange} handleSubmit={handleSubmit} cardDetail={cardDetail}/>
+      <div className={styles.cardInfoPrompt}> 
+        <p>Linked To current card</p>
+      </div>
       {
         cards[idx].linkTo.map((nextIdx)=>(
           <SimpleCard idx={nextIdx}/>
@@ -85,9 +91,11 @@ const SimpleCard = ({ idx })=>{
 
     return (
       <div className={styles.cardContainer}>
-        <div className={styles.card}>
-          <p>{cards[idx].title}</p>
-          <p>{cards[idx].description}</p>
+        <div className={styles.cardPadding}>
+          <p className={styles.title}>{cards[idx].title}</p>
+        </div>
+        <div className={styles.cardPadding}>
+          <p className={styles.description}>{cards[idx].description}</p>
         </div>
       </div>
     )

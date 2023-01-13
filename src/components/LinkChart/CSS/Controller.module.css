@@ -1,14 +1,14 @@
 .container{
     height: 100%;
     width:20vw;
-    background-color: rgb(212, 81, 19);
+    background-color: rgb(250, 250, 250);
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 h1{
     text-align: center;
-    color: white;
+    color: rgb(0, 0, 0);
     position: relative;
 }
 h1::after{
@@ -16,9 +16,9 @@ h1::after{
     position: absolute;
     bottom: 0;
     left:20%;
-    height: 3px;
+    height: 1px;
     width: 60%;
-    background-color: white;
+    background-color: rgb(0, 0, 0);
 }
 
 .controllerForm{
@@ -29,10 +29,11 @@ h1::after{
 
 .inputText{
     position: relative;
-    width: 100%;
-    margin: 15px 0 15px 0;
+    width: 90%;
+    margin: 15px 5%;
     display: flex;
     justify-content: center;
+    
 }
 .inputText .labelHolder{
     position: absolute;
@@ -51,23 +52,36 @@ h1::after{
     transition: all 0.15s ease-out;
 }
 .inputText :is(input[type=text],textarea){
-    width: 90%;
+    position: relative;
+    width: 100%;
     padding: 10px;
-    border-radius: 5px;
     border-style: none;
     outline: none;
+    border-bottom: 1px solid rgba(145, 143, 143, 0.5);
 }
 
 .inputText textarea{
     resize: vertical;
-    min-height: 100px;
+    min-height: 50px;
 }
 
 .inputText:focus-within label, .inputText :is(input[type=text],textarea):valid + .labelHolder label{
-    
-    border-radius: 5px;
-    
-    top:-15px;
+    top:-20px;
+}
+
+.inputText::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left:50%;
+    height: 1px;
+    transition: all 0.15s;
+    width: 0%;
+    background-color: rgb(0, 0, 0);
+}
+.inputText:focus-within:after{
+    left:0;
+    width: 100%;
 }
 
 .inputButtonRight{
@@ -85,15 +99,10 @@ h1::after{
     outline: none;
     cursor: pointer;
     margin-right: 5%;
-    color: rgb(212, 81, 19);
+    color: rgb(0, 0, 0);
     font-weight: bolder;
 }
 
-
-.cardContainer{
-    position: relative;
-    width: 100%;
-}
 
 .cardContainer .card{
     padding: 5px 10px;
@@ -101,4 +110,34 @@ h1::after{
     background-color: rgb(221, 249, 193);
     border-radius: 5px;
     border: 1px solid rgb(249, 160, 63);
+}
+
+.cardContainer {
+    position: relative;
+    border-radius: 5px;
+    margin: 10px 5%;
+    padding: 10px;
+    border: 1px solid rgb(156, 156, 156);
+    width: 90%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}
+
+.title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.description{
+    font-size: 14px;
+    color: rgba(18, 18, 18, 0.5);
+}
+
+.cardPadding{
+    padding:4px 6px;
+}
+
+.cardInfoPrompt{
+    padding: 30px 10px 10px 10%;
+    font-weight: bold;
 }

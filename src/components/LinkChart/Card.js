@@ -1,5 +1,7 @@
 import React,{ useContext } from 'react'
 
+import anchor from './Media/anchor.png'
+
 import styles from './CSS/Card.module.css'
 
 import { ActiveCardProvider } from './LineChartContainer'
@@ -24,10 +26,20 @@ export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
 
   return (
     <g transform={`translate(${x},${y})`}>
-    <foreignObject  height="100" width= "200" onMouseDown={startDragging} onDoubleClick={handleClick}>
+    <foreignObject  
+      height="100" width= "200" 
+      onMouseDown={startDragging} 
+      onDoubleClick={handleClick}>
             <div className={styles.card}>
-              <p>{title}</p>
-              <p>{description}</p>
+              <div className={styles.cardPadding}>
+                <p className={styles.title}>{title}</p>
+              </div>
+              <div className={styles.cardPadding}>
+                <p className={styles.description}>{description}</p>
+              </div>
+              <div className={styles.anchorPadding}>
+                <img src={anchor} alt="anchor" onMouseDown={(e)=>{e.stopPropagation()}}  draggable="true"/>
+              </div>
             </div>
     </foreignObject>
     </g>
