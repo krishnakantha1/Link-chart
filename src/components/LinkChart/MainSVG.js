@@ -1,30 +1,23 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+
+import styles from './CSS/MainSVG.module.css'
+import { getMousePositionOnSVG, getArrayFromSet } from './Util/general_util'
+import { updateCordsForCard, getCardIDList, getCardWithID } from './Util/cards_util'
+import { resizeSVG } from './Util/svg_dim_util'
+import { calculateGMatrixForZoom, calculateGMatrixForTranslate } from './Util/gMatrix_util'
+
+import { Line } from './Line'
 import { Card } from './Card'
 
-import styles from "./CSS/MainSVG.module.css"
-import { Line } from './Line'
+import { LinkChartContextProvider } from './LinkChartCentralProvider'
 
-import { ActiveCardProvider } from './LineChartContainer'
-
-const getMousePositionOnSVG = (e,svg)=>{
-  const ctm = svg.getScreenCTM()
-  return {
-    x : (e.clientX - ctm.e)/ctm.a,
-    y : (e.clientY - ctm.f)/ctm.d
-  }
-}
-
-export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, gMatrix, setGMatrix }) => {
-
-  const { activeCard,setActiveCard } = useContext(ActiveCardProvider)
+export const MainSVG = ({ wHeight, wWidth }) => {
+  const { cards, setCards, activeCard, setActiveCard, svgDim, setSvgDim, gMatrix, setGMatrix } = useContext(LinkChartContextProvider)
   
   const svgContainerRef = useRef(null)
 
   useEffect(()=>{
-
-    const {width,height}  = svgContainerRef.current.getBoundingClientRect()
-    setSvgDim({width,height})
-
+    resizeSVG(svgContainerRef,setSvgDim)
   },[wHeight,wWidth,setSvgDim])
   
   //draggable info
@@ -40,17 +33,16 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
   const svg = useRef(null)
 
   //start drag
-  const f = (idx,event)=>{
-
+  const startDragging = (card_id,event)=>{
     setDraggableState((prev)=>{
       const {x,y} = getMousePositionOnSVG(event,svg.current)
 
       return {
         ...prev,
         draggble:true,
-        draggableElementId:idx,
-        xdif : x - cards[idx].x,
-        ydif : y - cards[idx].y
+        draggableElementId:card_id,
+        xdif : x - cards[card_id].x,
+        ydif : y - cards[card_id].y
       }
     }
     )
@@ -62,28 +54,15 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
 
     //card move
     if(draggableState.draggble && draggableState.draggableElementId!==-1){
-      setCards(prev=>{
-        const {x,y} = getMousePositionOnSVG(e,svg.current)
-
-        const tempCards = [...prev]
-        tempCards[draggableState.draggableElementId].x = x - draggableState.xdif
-        tempCards[draggableState.draggableElementId].y = y - draggableState.ydif
-
-        return tempCards
-      })
+      const {x,y} = getMousePositionOnSVG(e,svg.current)
+      updateCordsForCard(draggableState.draggableElementId,x - draggableState.xdif,y - draggableState.ydif,setCards)
     }
 
     //Panning
     if(draggableState.draggble && draggableState.draggableElementId===-1){
-      setGMatrix((prev)=>{
-        const {x,y} = getMousePositionOnSVG(e,draggableState.anchorSVGProxy)
-        let proxyCTM = draggableState.anchorSVGProxy.getScreenCTM()
-    
-        const newMat = [...prev]
-         newMat[4] = proxyCTM.e + (x - draggableState.xdif)*proxyCTM.a
-         newMat[5] = proxyCTM.f + (y - draggableState.ydif)*proxyCTM.d
-        return newMat
-      })
+      const {x,y} = getMousePositionOnSVG(e,draggableState.anchorSVGProxy)
+      let proxyCTM = draggableState.anchorSVGProxy.getScreenCTM()
+      calculateGMatrixForTranslate(x,y,draggableState.xdif,draggableState.ydif,proxyCTM,setGMatrix)
     }
 
   }
@@ -99,40 +78,10 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
   }
 
   const zoom = (e)=>{
+    const {x,y} = getMousePositionOnSVG(e,svg.current)
+    const zoomOut = e.deltaY>0?true:false
 
-    setGMatrix((prev)=>{
-
-      const newMat = [...prev]
-      const zoomOut = e.deltaY>0?true:false
-
-      if(zoomOut && newMat[0]<0.2){
-        return newMat
-      }else if(!zoomOut && newMat[0]>2.5){
-        return newMat
-      }
-
-      const zoom =  Math.pow(1 + 0.75, -1 * zoomOut?-0.3:0.3)
-
-      const prevCTM = svg.current.getCTM()
-      const {x,y} = getMousePositionOnSVG(e,svg.current)
-      const domPoint = new DOMPoint(e.clientX,e.clientY)
-      domPoint.matrixTransform(prevCTM.inverse())
-
-      const template = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix()
-                                  .translate(x,y)
-                                  .scale(zoom)
-                                  .translate(-x,-y)
-      
-      const curCTM = prevCTM.multiply(template)
-
-      newMat[0] = curCTM.a
-      newMat[1] = curCTM.b
-      newMat[2] = curCTM.c
-      newMat[3] = curCTM.d
-      newMat[4] = curCTM.e
-      newMat[5] = curCTM.f
-      return newMat
-    })
+    calculateGMatrixForZoom(x,y,zoomOut,svg,setGMatrix)
   }
 
   const translate = (e)=>{
@@ -140,19 +89,19 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
     setDraggableState((prev)=>{
       const {x,y} = getMousePositionOnSVG(e,svg.current)
       let temp = svg.current.getScreenCTM()
-    return {
-      ...prev,
-      draggble:true,
-      draggableElementId:-1,
-      xdif : x,
-      ydif : y,
-      anchorSVGProxy : {
-          getScreenCTM : ()=> {
-            return temp
-          }
+      return {
+        ...prev,
+        draggble:true,
+        draggableElementId:-1,
+        xdif : x,
+        ydif : y,
+        anchorSVGProxy : {
+            getScreenCTM : ()=> {
+              return temp
+            }
+        }
       }
-    }
-  })
+    })
   }
 
   return (
@@ -160,8 +109,8 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
       <svg 
         className={styles.SVGMain} height={svgDim.height} width={svgDim.width} 
         onDoubleClick = {(e)=>{ 
-          if(activeCard===-1) return
-          setActiveCard(-1)
+          if(activeCard==="-1") return
+          setActiveCard("-1")
          }}
         onMouseDown={translate}
         onMouseMove={tryDragging}
@@ -171,27 +120,37 @@ export const MainSVG = ({ wHeight, wWidth, cards, setCards, svgDim, setSvgDim, g
       >
         <g ref={svg} transform={`matrix(${gMatrix.join(" ")})`}>
           {
-            cards.map((card,_,card_self)=>{
-              if(!card.linkTo){
+            getCardIDList(cards).map((card_id)=>{
+              const card = getCardWithID(card_id,cards)
+
+              if(!card.parent_of){
                 return null
               }
-              return card.linkTo.map((linkID,) => (
-                <Line key={Math.random()} x1={card.x} y1={card.y} x2={card_self[linkID].x} y2={card_self[linkID].y}/>
-              ))
+
+              return getArrayFromSet(card.parent_of).map((child_id) => {
+                const child_card = getCardWithID(child_id,cards)
+                return <Line 
+                          key={`${card_id}_${child_id}`} 
+                          x1={card.x} 
+                          y1={card.y} 
+                          x2={child_card.x} 
+                          y2={child_card.y}/>
+              })
             })
           }
           
           {
-            cards.map((card,i)=>(
-              <Card 
-                key={i} 
+            getCardIDList(cards).map((card_id)=>{
+              const card = getCardWithID(card_id,cards)
+              return <Card 
+                key={card_id} 
                 x={card.x} 
                 y={card.y} 
                 title={card.title} 
                 description={card.description}
-                idx={i} 
-                upsertStartDragging={f}/>
-            ))
+                card_id={card_id} 
+                startDragging={startDragging}/>
+            })
           }
         
         </g>

@@ -23,7 +23,7 @@ export const createCard = (card_id,title,description,x,y,setCards)=>{
     if(isNullOrUndefined(y)) return false
 
     setCards(prev=>{
-        const newCards = [...prev]
+        const newCards = {...prev}
         newCards[card_id] = {
             card_id,
             title,
@@ -52,7 +52,7 @@ export const massAddChildCards = (card_id,child_id_list,setCards)=>{
     if(isNullOrUndefined(child_id_list)) child_id_list = []
 
     setCards(prev=>{
-        const newCards = [...prev]
+        const newCards = {...prev}
 
         const parent_set = new Set(newCards[card_id].parent_of)
 
@@ -67,6 +67,52 @@ export const massAddChildCards = (card_id,child_id_list,setCards)=>{
 }
 
 /*
+    used to get a list of card_id from cards state
+
+    cards : react state
+*/
+export const getCardIDList = (cards)=>{
+    if(isNullOrUndefined(cards)) return []
+
+    return Object.keys(cards)
+}
+
+/*
+    used to get card from cards with the given id
+
+    card_id : string
+    cards : react state
+*/
+export const getCardWithID = (card_id,cards)=>{
+    if(isNullOrUndefined(cards)) return {}
+    if(!cards[card_id]) return {}
+
+    return cards[card_id]
+}
+
+/*
+    used to update x,y value for a card
+
+    card_id : string
+    x : number
+    y : number
+    setCards : react state setter
+*/
+export const updateCordsForCard = (card_id,x,y,setCards)=>{
+    if(isNullOrUndefined(card_id)) return false;
+    if(isNullOrUndefined(x)) return false;
+    if(isNullOrUndefined(y)) return false;
+
+    setCards(prev=>{
+        const newCards = {...prev}
+        newCards[card_id].x = x
+        newCards[card_id].y = y
+        return newCards
+    })
+    return true
+}
+
+/*
     used to delete a card.
 
     card_id : string
@@ -76,7 +122,7 @@ export const deleteCard = (card_id,setCards)=>{
     if(isNullOrUndefined(card_id)) return false
     
     setCards(prev=>{
-        const newCards = [...prev]
+        const newCards = {...prev}
 
         for(let parent_id of newCards[card_id].child_of){
             newCards[parent_id].parent_of.delete(card_id)
@@ -113,9 +159,9 @@ export const createChildCard = (parent_id,child_id,title,description,x,y,setCard
     if(isNullOrUndefined(y)) return false
 
     setCards(prev=>{
-        const newCards = [...prev]
+        const newCards = {...prev}
         newCards[child_id] = {
-            card_id,
+            child_id,
             title,
             description,
             x,
@@ -125,7 +171,7 @@ export const createChildCard = (parent_id,child_id,title,description,x,y,setCard
         }
 
         newCards[parent_id].parent_of.add(child_id)
-        newCards[child_id].child_of(parent_id)
+        newCards[child_id].child_of.add(parent_id)
 
         return newCards
     })
@@ -148,7 +194,7 @@ export const linkTwoCreatedCards = (parent_id,child_id,cards,setCards)=>{
     if(cards[parent_id].parent_of.has(child_id) && cards[child_id].child_of.has(parent_id)) return false
 
     setCards(prev=>{
-        const newCards = [...prev]
+        const newCards = {...prev}
 
         newCards[parent_id].parent_of = new Set(newCards[parent_id].parent_of)
         newCards[child_id].child_of = new Set(newCards[child_id].child_of)
@@ -177,7 +223,7 @@ export const deleteLink = (parent_id,child_id,cards,setCards)=>{
 
     if(cards[parent_id].parent_of.has(child_id) && cards[child_id].child_of.has(parent_id)){
         setCards(prev=>{
-            const newCards = [...prev]
+            const newCards = {...prev}
             
             newCards[parent_id].parent_of = new Set(newCards[parent_id].parent_of)
             newCards[child_id].child_of = new Set(newCards[child_id].child_of)

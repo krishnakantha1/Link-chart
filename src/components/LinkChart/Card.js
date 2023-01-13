@@ -3,38 +3,41 @@ import React,{ useContext } from 'react'
 import anchor from './Media/anchor.png'
 
 import styles from './CSS/Card.module.css'
+import { linkTwoCreatedCards } from './Util/cards_util'
 
-import { ActiveCardProvider } from './LineChartContainer'
+import { LinkChartContextProvider } from './LinkChartCentralProvider'
 
-export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
-  const { setActiveCard,linkExistingCard } = useContext(ActiveCardProvider)
+export const Card = ({x,y,title,description,card_id,startDragging}) => {
+  const { cards, setCards, setActiveCard } = useContext(LinkChartContextProvider)
 
-    const startDragging = (e)=>{
+    const handleMouseDown = (e)=>{
         e.preventDefault()
         e.stopPropagation()
         
-        upsertStartDragging(idx,e)
+        startDragging(card_id,e)
 
     }
 
-    const handleClick = (e)=>{
+    const handleDoubleClick = (e)=>{
       e.preventDefault()
       e.stopPropagation()
 
-      setActiveCard(idx)
+      setActiveCard(card_id)
+    }
+
+    const handleOnDrop = (e)=>{
+        const parent_id = e.dataTransfer.getData('parent_id')
+        linkTwoCreatedCards(parent_id,card_id,cards,setCards)
+        e.preventDefault()
     }
 
   return (
     <g transform={`translate(${x},${y})`}>
     <foreignObject  
       height="100" width= "200" 
-      onMouseDown={startDragging} 
-      onDoubleClick={handleClick}
-      onDrop={(e)=>{
-        const parent = e.dataTransfer.getData('parentNode')
-        linkExistingCard(parent,idx)
-        e.preventDefault()
-      }}
+      onMouseDown={handleMouseDown} 
+      onDoubleClick={handleDoubleClick}
+      onDrop={handleOnDrop}
       onDragOver={(e)=>{e.preventDefault()}}
       >
             <div className={styles.card}
@@ -50,7 +53,7 @@ export const Card = ({x,y,title,description,idx,upsertStartDragging}) => {
                 <img src={anchor} alt="anchor"  draggable="true" 
                  onMouseDown={(e)=>{e.stopPropagation()}} 
                  onMouseMove={(e)=>{e.stopPropagation()}}
-                 onDragStart={(e)=>{e.dataTransfer.setData('parentNode',idx)}}
+                 onDragStart={(e)=>{e.dataTransfer.setData('parent_id',card_id)}}
                   />
               </div>
             </div>
