@@ -4,14 +4,16 @@
     background-color: rgb(250, 250, 250);
     overflow-x: hidden;
     overflow-y: auto;
+    border-top: 1px solid rgb(215, 215, 215);
 }
 
-h1{
+.container h1{
     text-align: center;
     color: rgb(0, 0, 0);
     position: relative;
+    margin-top: 5px;
 }
-h1::after{
+.container h1::after{
     content: '';
     position: absolute;
     bottom: 0;
@@ -92,7 +94,8 @@ h1::after{
     justify-content: flex-end;
 }
 
-.inputButtonRight button{
+.inputButtonRight button,
+.deleteButtonPadding .cardDeleteButton{
     padding: 10px 15px;
     border-radius: 5px;
     border-style: none;
@@ -101,6 +104,7 @@ h1::after{
     margin-right: 5%;
     color: rgb(0, 0, 0);
     font-weight: bolder;
+    background-color: rgb(215, 215, 215);
 }
 
 
@@ -133,6 +137,17 @@ h1::after{
     color: rgba(18, 18, 18, 0.5);
 }
 
+.deleteButtonPadding{
+    padding: 5x;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.deleteButtonPadding .cardDeleteButton{
+    background-color: red;
+    color: white;
+}
+
 .cardPadding{
     padding:4px 6px;
 }
@@ -140,4 +155,46 @@ h1::after{
 .cardInfoPrompt{
     padding: 30px 10px 10px 10%;
     font-weight: bold;
+}
+
+.cardContainer button{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    margin: 5px;
+    right:0;
+    top:0;
+    border: none;
+    border-radius: 50%;
+    outline: none;
+    background-color: rgb(215, 215, 215);
+}
+.cardContainer button:hover{
+    background-color: black;
+}
+.cardContainer button::after{
+    content: '';
+    position: absolute;
+    display: block;
+    background-color: black;
+    width: 2px;
+    left: 12px;
+    top: 5px;
+    bottom: 5px;
+    transform: rotate(45deg);
+}
+.cardContainer button::before{
+    content: '';
+    position: absolute;
+    display: block;
+    background-color: black;
+    width: 2px;
+    left: 12px;
+    top: 5px;
+    bottom: 5px;
+    transform: rotate(-45deg);
+}
+.cardContainer button:hover::after,
+.cardContainer button:hover::before{
+    background-color:rgb(215, 215, 215);;
 }

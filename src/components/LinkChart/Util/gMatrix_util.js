@@ -55,11 +55,11 @@ export const calculateGMatrixForZoom = (x,y,zoomOut,svg,setGMatrix)=>{
     proxyCTM : CTM // [a,b,c,d,e,f] representing the CTM at the start of the Pan
     setGMatrix : react state setter
 */
-export const calculateGMatrixForTranslate = (x,y,xdif,ydif,proxyCTM,setGMatrix)=>{
+export const calculateGMatrixForTranslate = (x,y,xdif,ydif,proxyCTM,setGMatrix,yOffset)=>{
     setGMatrix((prev)=>{
         const newMat = [...prev]
          newMat[4] = proxyCTM.e + (x - xdif)*proxyCTM.a
-         newMat[5] = proxyCTM.f + (y - ydif)*proxyCTM.d
+         newMat[5] = proxyCTM.f + (y - ydif)*proxyCTM.d - yOffset
         return newMat
       })
 }

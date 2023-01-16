@@ -128,6 +128,10 @@ export const deleteCard = (card_id,setCards)=>{
             newCards[parent_id].parent_of.delete(card_id)
         }
 
+        for(let child_id of newCards[card_id].parent_of){
+            newCards[child_id].child_of.delete(card_id)
+        }
+
         if (newCards[card_id]){
             delete newCards[card_id]
         }
@@ -229,7 +233,7 @@ export const deleteLink = (parent_id,child_id,cards,setCards)=>{
             newCards[child_id].child_of = new Set(newCards[child_id].child_of)
 
             newCards[parent_id].parent_of.delete(child_id)
-            newCards[parent_id].child_of.delete(parent_id)
+            newCards[child_id].child_of.delete(parent_id)
 
             return newCards
         })

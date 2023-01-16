@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 
 import styles from './CSS/Controller.module.css'
-import { createCard, createChildCard, getCardWithID } from './Util/cards_util'
+import { createCard, createChildCard, getCardWithID, deleteCard, deleteLink } from './Util/cards_util'
 import { createID, getArrayFromSet } from './Util/general_util'
 
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
@@ -52,7 +52,7 @@ const CreateNewCard = ()=>{
 
 //display extended card info for card with inedx idx
 const CardInfo = ({ card_id })=>{
-  const { cards,setCards, svgDim, gMatrix } = useContext(LinkChartContextProvider)
+  const { cards,setCards, svgDim, gMatrix, setActiveCard } = useContext(LinkChartContextProvider)
 
   const [cardDetail,setCardDetail] = useState(initialCardDetails)
 
@@ -73,10 +73,21 @@ const CardInfo = ({ card_id })=>{
     setCardDetail(initialCardDetails)
   }
 
+  const handleClick = (e)=>{
+    deleteCard(card_id,setCards)
+    setActiveCard("-1")
+  }
+  
+
 
   return (
     <div>
       <SimpleCard card_id={card_id}/>
+      
+      <div className={styles.deleteButtonPadding}>
+      <button className={styles.cardDeleteButton} onClick={handleClick}>Delete card</button>
+      </div>
+      
       <div className={styles.cardInfoPrompt}> 
         <p>Create a linking card</p>
       </div>
@@ -86,7 +97,7 @@ const CardInfo = ({ card_id })=>{
       </div>
       {
         getArrayFromSet(getCardWithID(card_id,cards).parent_of).map((child_id)=>(
-          <SimpleCard key={child_id} card_id={child_id}/>
+          <SimpleCard key={child_id} parent_id={card_id} card_id={child_id} childCard={true}/>
         ))
       }
     </div>
@@ -94,9 +105,13 @@ const CardInfo = ({ card_id })=>{
 }
 
 //display barebones card info for card with index idx
-const SimpleCard = ({ card_id })=>{
-    const { cards } = useContext(LinkChartContextProvider)
+const SimpleCard = ({ card_id,childCard,parent_id })=>{
+    const { cards, setCards } = useContext(LinkChartContextProvider)
     const card = getCardWithID(card_id,cards)
+
+    const handleClick = (e)=>{
+      deleteLink(parent_id,card_id,cards,setCards)
+    }
 
     return (
       <div className={styles.cardContainer}>
@@ -106,6 +121,7 @@ const SimpleCard = ({ card_id })=>{
         <div className={styles.cardPadding}>
           <p className={styles.description}>{card.description}</p>
         </div>
+        {childCard && <button title='Delete Link' onClick={handleClick}></button>}
       </div>
     )
 }

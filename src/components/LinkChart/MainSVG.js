@@ -62,7 +62,8 @@ export const MainSVG = ({ wHeight, wWidth }) => {
     if(draggableState.draggble && draggableState.draggableElementId===-1){
       const {x,y} = getMousePositionOnSVG(e,draggableState.anchorSVGProxy)
       let proxyCTM = draggableState.anchorSVGProxy.getScreenCTM()
-      calculateGMatrixForTranslate(x,y,draggableState.xdif,draggableState.ydif,proxyCTM,setGMatrix)
+      const yOffset = svgContainerRef.current.getBoundingClientRect().y
+      calculateGMatrixForTranslate(x,y,draggableState.xdif,draggableState.ydif,proxyCTM,setGMatrix,yOffset)
     }
 
   }
@@ -89,6 +90,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
     setDraggableState((prev)=>{
       const {x,y} = getMousePositionOnSVG(e,svg.current)
       let temp = svg.current.getScreenCTM()
+  
       return {
         ...prev,
         draggble:true,

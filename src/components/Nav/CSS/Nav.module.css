@@ -1,0 +1,39 @@
+.container{
+    position: relative;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(255, 252, 233);
+}
+
+.container .appName{
+    position: relative;
+    height: 100%;
+    width: max(10vw,100px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container ul {
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 25px;
+    
+}
+.container ul li ,.container ul li .link{
+    list-style: none;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 15px;
+    color: black;
+}
+
+.container ul li .link:hover{
+    background-color: rgb(255, 0, 0);
+    border-radius: 5px;
+    color: white;
+}

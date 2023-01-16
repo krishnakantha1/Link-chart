@@ -1,6 +1,6 @@
 import React,{ useContext } from 'react'
 
-import anchor from './Media/anchor.png'
+import link from './Media/link.png'
 
 import styles from './CSS/Card.module.css'
 import { linkTwoCreatedCards } from './Util/cards_util'
@@ -50,7 +50,7 @@ export const Card = ({x,y,title,description,card_id,startDragging}) => {
                 <p className={styles.description}>{description}</p>
               </div>
               <div className={styles.anchorPadding}>
-                <img src={anchor} alt="anchor"  draggable="true" 
+                <img src={link} alt="anchor"  draggable="true" 
                  onMouseDown={(e)=>{e.stopPropagation()}} 
                  onMouseMove={(e)=>{e.stopPropagation()}}
                  onDragStart={(e)=>{e.dataTransfer.setData('parent_id',card_id)}}

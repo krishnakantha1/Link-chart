@@ -1,0 +1,35 @@
+.container{
+    height: 90vh;
+    margin: 0 max(20vw,10px);
+
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    gap : 10px
+}
+
+.itemContainer {
+    padding: 20px 30px;
+    border-radius: 10px;
+    background-color: rgb(224, 255, 255);
+    border: 1px solid rgb(126, 190, 255);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.itemContainer p {
+
+}
+.itemContainer button {
+    position: relative;
+    height : 30px;
+    width: 30px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+.itemContainer button img {
+    height: 100%;
+    width: fit-content;
+}

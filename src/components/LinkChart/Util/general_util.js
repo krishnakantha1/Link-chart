@@ -11,7 +11,7 @@ export const getMousePositionOnSVG = (e,svg)=>{
     const ctm = svg.getScreenCTM()
     return {
       x : (e.clientX - ctm.e)/ctm.a,
-      y : (e.clientY - ctm.f)/ctm.d
+      y : (e.clientY - ctm.f)/ctm.d 
     }
 }
 
