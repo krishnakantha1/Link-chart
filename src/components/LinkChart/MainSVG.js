@@ -142,7 +142,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
                 
                 return <Line 
                           key={`${card_id}_${child_id}`} 
-                          x1={card.x - (offset*10)} 
+                          x1={card.x + (offset*10)} 
                           y1={card.y} 
                           x2={child_card.x} 
                           y2={child_card.y}/>
