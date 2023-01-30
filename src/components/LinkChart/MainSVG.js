@@ -131,13 +131,18 @@ export const MainSVG = ({ wHeight, wWidth }) => {
               if(!card.parent_of){
                 return null
               }
+              
+              let childern_count = card.parent_of.size
+              childern_count = childern_count%2===0?0:1
 
-              return getArrayFromSet(card.parent_of).map((child_id) => {
+              return getArrayFromSet(card.parent_of).map((child_id,i) => {
                 const child_card = getCardWithID(child_id,cards)
+
+                const offset = i - childern_count/2
                 
                 return <Line 
                           key={`${card_id}_${child_id}`} 
-                          x1={card.x} 
+                          x1={card.x - (offset*10)} 
                           y1={card.y} 
                           x2={child_card.x} 
                           y2={child_card.y}/>

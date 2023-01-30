@@ -1,5 +1,6 @@
  //"http://localhost:5000"
- export const host = "https://planit-backend.onrender.com"
+ //"https://planit-backend.onrender.com"
+ export const host = "http://localhost:5000"
 
 //charts
 export const getUserCharts = "/api/linkchart/get-chart"

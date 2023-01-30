@@ -196,7 +196,7 @@ const SimpleCard = ({ card_id,childCard,parent_id })=>{
       })
 
       const { error, message } = resp.data
-
+      console.log(resp.data)
       if(error){
         console.log(message)
       }else{
