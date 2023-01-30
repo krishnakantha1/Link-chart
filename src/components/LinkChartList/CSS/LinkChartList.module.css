@@ -8,28 +8,81 @@
     gap : 10px
 }
 
-.itemContainer {
-    padding: 20px 30px;
-    border-radius: 10px;
-    background-color: rgb(224, 255, 255);
-    border: 1px solid rgb(126, 190, 255);
+
+.createChartContainer{
+    padding: 5px 15px;
+}
+.createChartContainer form {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap : 10px;
+}
+.createChartContainer form label {
+    color: var(--home-text-color);
+}
+.createChartContainer form input {
+    padding: 10px 15px;
+}
+.createChartContainer form button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-style: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 5%;
+    color: rgb(0, 0, 0);
+    font-weight: bolder;
+    background-color: rgb(215, 215, 215);
 }
 
-.itemContainer p {
-
+.myChartList{
+    margin : 5px 15px;
 }
-.itemContainer button {
+.myChartList h1{
+    color: rgb(0, 0, 0);
+    position: relative;
+    margin-top: 5px;
+    margin: 10px;
+    color: var(--home-text-color);
+}
+.myChartList .chartList{
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap : 8px;
+}
+
+
+.chartItemContainer {
+    padding: 20px 30px;
+    border-radius: 2px;
+    border: 1px solid grey;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: var(--home-text-color);
+}
+.chartItemContainer .content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.chartItemContainer p {
+    text-transform: capitalize;
+}
+.chartItemContainer button {
     position: relative;
     height : 30px;
     width: 30px;
     background-color: transparent;
     border: none;
     outline: none;
+    justify-self: flex-end;
 }
-.itemContainer button img {
+.chartItemContainer button img {
     height: 100%;
     width: fit-content;
 }
+

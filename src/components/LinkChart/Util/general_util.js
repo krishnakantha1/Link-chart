@@ -23,10 +23,28 @@ export const makePath = (x1,y1,x2,y2)=>{
     xa2 = x2
     ya2 = ya1
 
-    return [{x : x1,y : y1},
-            {x : xa1,y : ya1},
-            {x : xa2,y : ya2},
-            {x : x2,y : y2}]
+    let cx,cy
+    if(Math.abs(y2-ya2)>50){
+        cx = x2
+        if(y2<ya2){
+            cy = y2+50
+        }else{
+            cy = y2-50
+        }
+    }else{
+        cy = ya2
+        if(x2<xa1){
+            cx = x2+100
+        }else{
+            cx = x2-100
+        }
+    }
+
+    return [{x : x1, y : y1},
+            {x : xa1, y : ya1},
+            {x : xa2, y : ya2},
+            {x : x2, y : y2},
+            {x : cx, y : cy}]
 }
 
 export const createID = ()=>{

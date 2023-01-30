@@ -1,10 +1,15 @@
 import React, { useContext, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
+
 
 import styles from './CSS/Controller.module.css'
 import { createCard, createChildCard, getCardWithID, deleteCard, deleteLink } from './Util/cards_util'
-import { createID, getArrayFromSet } from './Util/general_util'
+import {  getArrayFromSet } from './Util/general_util'
 
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
+import { host, createCard as cc, deleteCard as dc, deleteLink as dl } from '../../constants'
+import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
 
 const initialCardDetails = {title:'',description:''}
 
@@ -25,7 +30,10 @@ export const Controller = () => {
 
 //wrapper to create a new card
 const CreateNewCard = ()=>{
+  const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
   const { setCards, svgDim, gMatrix } = useContext(LinkChartContextProvider)
+
+  const { chart_id } = useParams()
 
   const [cardDetail,setCardDetail] = useState(initialCardDetails)
   //create card form event handlers
@@ -35,14 +43,36 @@ const CreateNewCard = ()=>{
     })
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = async (e)=>{
     e.preventDefault()
     if(cardDetail.title==='' || cardDetail.description==='') return
 
     const cx = ((svgDim.width)/2 - gMatrix[4])/gMatrix[0]
     const cy = ((svgDim.height)/2 - gMatrix[5])/gMatrix[3]
-    createCard(createID(),cardDetail.title,cardDetail.description,cx,cy,setCards)
-    setCardDetail(initialCardDetails)
+
+    const resp = await axios({
+      method : "POST",
+      url :  `${host}${cc}`,
+      headers : "application/json",
+      data : {
+        jwt : user_jwt,
+        chartid : chart_id,
+        title : cardDetail.title,
+        description : cardDetail.description,
+        x : cx,
+        y : cy,
+        parent_id : null
+      }
+    })
+
+    if(resp.data.error){
+      console.log(resp.data)
+    }else{
+      const { cardid } = resp.data
+      createCard(cardid,cardDetail.title,cardDetail.description,cx,cy,setCards)
+      setCardDetail(initialCardDetails)
+    }
+    
   }
 
   return (
@@ -50,9 +80,11 @@ const CreateNewCard = ()=>{
   )
 }
 
-//display extended card info for card with inedx idx
+//display extended card info for card with id card_id
 const CardInfo = ({ card_id })=>{
-  const { cards,setCards, svgDim, gMatrix, setActiveCard } = useContext(LinkChartContextProvider)
+  const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
+  const { cards, setCards, svgDim, gMatrix, setActiveCard } = useContext(LinkChartContextProvider)
+  const { chart_id } = useParams()
 
   const [cardDetail,setCardDetail] = useState(initialCardDetails)
 
@@ -63,19 +95,56 @@ const CardInfo = ({ card_id })=>{
     })
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = async (e)=>{
     e.preventDefault()
     if(cardDetail.title==='' || cardDetail.description==='') return
 
     const cx = ((svgDim.width)/2 - gMatrix[4])/gMatrix[0]
     const cy = ((svgDim.height)/2 - gMatrix[5])/gMatrix[3]
-    createChildCard(card_id,createID(),cardDetail.title,cardDetail.description,cx,cy,setCards)
-    setCardDetail(initialCardDetails)
+
+    const resp = await axios({
+      method : "POST",
+      url :  `${host}${cc}`,
+      headers : "application/json",
+      data : {
+        jwt : user_jwt,
+        chartid : chart_id,
+        title : cardDetail.title,
+        description : cardDetail.description,
+        x : cx,
+        y : cy,
+        parentid : card_id
+      }
+    })
+
+    if(resp.data.error){
+      console.log(resp.data)
+    }else{
+      const { cardid } = resp.data
+      createChildCard(card_id,cardid,cardDetail.title,cardDetail.description,cx,cy,setCards)
+      setCardDetail(initialCardDetails)
+    }
   }
 
-  const handleClick = (e)=>{
-    deleteCard(card_id,setCards)
-    setActiveCard("-1")
+  const handleClick = async (e)=>{
+    const resp = await axios({
+      method : "DELETE",
+      url : `${host}${dc}`,
+      headers : "application/json",
+      data : {
+        jwt : user_jwt,
+        chartid : chart_id,
+        cardid : card_id
+      }
+    })
+    
+    const { error,message } = resp.data
+    if(error){
+      console.log(message)
+    }else{
+      deleteCard(card_id,setCards)
+      setActiveCard("-1")
+    }
   }
   
 
@@ -85,7 +154,7 @@ const CardInfo = ({ card_id })=>{
       <SimpleCard card_id={card_id}/>
       
       <div className={styles.deleteButtonPadding}>
-      <button className={styles.cardDeleteButton} onClick={handleClick}>Delete card</button>
+        <button className={styles.cardDeleteButton} onClick={handleClick}>Delete card</button>
       </div>
       
       <div className={styles.cardInfoPrompt}> 
@@ -106,11 +175,33 @@ const CardInfo = ({ card_id })=>{
 
 //display barebones card info for card with index idx
 const SimpleCard = ({ card_id,childCard,parent_id })=>{
+    const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
     const { cards, setCards } = useContext(LinkChartContextProvider)
+    const { chart_id } = useParams()
     const card = getCardWithID(card_id,cards)
 
-    const handleClick = (e)=>{
-      deleteLink(parent_id,card_id,cards,setCards)
+
+    const handleClick = async (e)=>{
+
+      const resp = await axios({
+        method : "DELETE",
+        url : `${host}${dl}`,
+        headers : "application/json",
+        data : {
+          chartid : chart_id,
+          jwt : user_jwt,
+          parentid : parent_id,
+          childid : card_id
+        }
+      })
+
+      const { error, message } = resp.data
+
+      if(error){
+        console.log(message)
+      }else{
+        deleteLink(parent_id,card_id,cards,setCards)
+      }
     }
 
     return (

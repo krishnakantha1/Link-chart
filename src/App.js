@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom';
 
 import "./App.css"
 
 import { UserCredentialProvider } from './components/UserCredentialProvider/UserCredentialProvider'
-import { LineChartContainer } from './components/LinkChart/LineChartContainer'
-import { LinkChartList } from './components/LinkChartList/LinkChartList';
+
+
 import { Nav } from './components/Nav/Nav';
+
+const LineChartContainer = lazy(()=> import('./components/LinkChart/LineChartContainer'))
+const LinkChartList = lazy(()=> import('./components/LinkChartList/LinkChartList')) 
+const Home = lazy(()=> import('./components/Home/Home')) 
 
 const App = ()=>{
   const [windowDim,setWindowDim] = useState([window.innerHeight,window.innerWidth]);
@@ -21,12 +25,16 @@ const App = ()=>{
   return (
     <UserCredentialProvider>
       <Nav/>
+      <Suspense fallback={<div>Loading...........</div>}>
       <Routes>
-        <Route path='/linkchart' element={<LinkChartList/>}/>
-        <Route path='/linkchart/:chart_id' element={<LineChartContainer wHeight={windowDim[0]} wWidth={windowDim[1]}/>}/>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/linkchart' element={<LinkChartList/>}/>
+          <Route path='/linkchart/:chart_id' element={<LineChartContainer wHeight={windowDim[0]} wWidth={windowDim[1]}/>}/>
+        
       </Routes>
+      </Suspense>
     </UserCredentialProvider>
   )
 }
-//813405-d45113-f9a03f-f8dda4-ddf9c1
+
 export default App

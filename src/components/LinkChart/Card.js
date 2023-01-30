@@ -1,14 +1,21 @@
 import React,{ useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 import link from './Media/link.png'
 
 import styles from './CSS/Card.module.css'
-import { linkTwoCreatedCards } from './Util/cards_util'
+import { checkLinkValidity, linkTwoCreatedCards } from './Util/cards_util'
 
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
+import { host, createLink } from '../../constants'
+import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
+
 
 export const Card = ({x,y,title,description,card_id,startDragging}) => {
   const { cards, setCards, setActiveCard } = useContext(LinkChartContextProvider)
+  const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
+  const { chart_id } = useParams()
 
     const handleMouseDown = (e)=>{
         e.preventDefault()
@@ -25,9 +32,34 @@ export const Card = ({x,y,title,description,card_id,startDragging}) => {
       setActiveCard(card_id)
     }
 
-    const handleOnDrop = (e)=>{
+    const handleOnDrop = async (e)=>{
         const parent_id = e.dataTransfer.getData('parent_id')
-        linkTwoCreatedCards(parent_id,card_id,cards,setCards)
+
+        if(!checkLinkValidity(parent_id,card_id,cards)){
+          console.log("cycle detected. not going to create a link.")
+          return
+        }
+
+        const resp = await axios({
+          method : "POST",
+          url : `${host}${createLink}`,
+          headers : "application/json",
+          data : {
+            jwt : user_jwt,
+            chartid : chart_id,
+            parentid : parent_id,
+            childid : card_id
+          }
+        })
+
+        const { error, message } = resp.data
+
+        if(error){
+          console.log(message)
+        }else{
+          linkTwoCreatedCards(parent_id,card_id,cards,setCards)
+        }
+        
         e.preventDefault()
     }
 

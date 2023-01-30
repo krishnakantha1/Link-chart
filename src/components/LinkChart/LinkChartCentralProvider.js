@@ -1,7 +1,13 @@
-import React,{ useState,createContext } from 'react'
+import React,{ useState,createContext, useContext, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
+
+import { host, getCards } from '../../constants'
+import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
+import { formatCardData } from './Util/cards_util'
+
 
 export const LinkChartContextProvider = createContext(null)
-
 /*card {
   id : string
   x : number
@@ -12,11 +18,14 @@ export const LinkChartContextProvider = createContext(null)
 }*/
 
 export const LinkChartCentralProvider = ({children}) => {
+    const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
+    const { chart_id } = useParams()
+
     //cards to be displayed in the svg
     /*  CARDS STRUCTURE : object
         {
             card_id : {
-                id : card_id (string),
+                card_id : card_id (string),
                 x : [number]
                 y : [number]
                 title : [string]
@@ -47,6 +56,38 @@ export const LinkChartCentralProvider = ({children}) => {
     */
     const [activeCard,setActiveCard] = useState("-1")
 
+    /*  state to keep track of all changed card cords
+        Set {
+            card_id : string
+        }
+    */
+   const [updatedCards,setUpdatedCards] = useState(new Set())
+
+    useEffect(()=>{
+        const getCardDetails = async ()=>{
+            const resp = await axios({
+                method : "POST",
+                url : `${host}${getCards}`,
+                headers : "application/json",
+                data : {
+                    jwt : user_jwt,
+                    chartid : chart_id
+                }
+            })
+
+            const { error,message } = resp.data
+
+            if(error){
+                console.log(message)
+            }else{
+                setCards(formatCardData(resp.data.data))
+            }
+
+        }
+
+        getCardDetails()
+    },[user_jwt,chart_id])
+
     return (
         <LinkChartContextProvider.Provider value={{
             cards,
@@ -56,7 +97,9 @@ export const LinkChartCentralProvider = ({children}) => {
             gMatrix,
             setGMatrix,
             activeCard,
-            setActiveCard
+            setActiveCard,
+            updatedCards,
+            setUpdatedCards
         }}> 
             {children}
         </LinkChartContextProvider.Provider>

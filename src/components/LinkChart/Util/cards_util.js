@@ -2,7 +2,50 @@
     Has all required functions for modifing state cards in LinkCharCentralProvider Component.
 */
 
-import { isNullOrUndefined } from "./general_util"
+import { getArrayFromSet, isNullOrUndefined } from "./general_util"
+
+/*
+    used to format data obtained from server to react readable card state
+
+    data : [{
+        id : string
+        title : string
+        description : string
+        x : number
+        y : number
+        Parent_of : srting
+    }...]
+*/
+export const formatCardData = (data)=>{
+    if(isNullOrUndefined(data)) return {}
+
+    const result = {}
+    for(let i=0; i<data.length; i++){
+        const { id, title, description, x, y } = data[i]
+        if(!result[id]){
+            result[id] = {
+                card_id : id,
+                x : x,
+                y : y,
+                title : title,
+                description : description,
+                parent_of : new Set(),
+                child_of : new Set()
+            }
+        }
+    }
+
+    for(let i=0; i<data.length; i++){
+        const { id, Parent_of } = data[i]
+
+        if(isNullOrUndefined(Parent_of)) continue
+
+        result[id].parent_of.add(Parent_of)
+        result[Parent_of].child_of.add(id)
+    }
+
+    return result
+}
 
 /*
     used to create stand alone card.
@@ -15,7 +58,7 @@ import { isNullOrUndefined } from "./general_util"
     y : number
     setCards : react state setter
 */
-export const createCard = (card_id,title,description,x,y,setCards)=>{
+export const createCard = async (card_id,title,description,x,y,setCards)=>{
     if(isNullOrUndefined(card_id)) return false
     if(isNullOrUndefined(title)) return false
     if(isNullOrUndefined(description)) return false
@@ -195,7 +238,8 @@ export const linkTwoCreatedCards = (parent_id,child_id,cards,setCards)=>{
     if(isNullOrUndefined(parent_id)) return false
     if(isNullOrUndefined(child_id)) return false
     if(parent_id === child_id) return false
-    if(cards[parent_id].parent_of.has(child_id) && cards[child_id].child_of.has(parent_id)) return false
+    if(cards[parent_id].parent_of.has(child_id) || cards[child_id].child_of.has(parent_id)) return false
+    if(cards[child_id].parent_of.has(parent_id) || cards[parent_id].child_of.has(child_id)) return false
 
     setCards(prev=>{
         const newCards = {...prev}
@@ -210,6 +254,35 @@ export const linkTwoCreatedCards = (parent_id,child_id,cards,setCards)=>{
       })
 
       return true;
+}
+
+/*
+    used as a local function for recursively depth first serach to see if parent can be found before linking
+
+*/
+
+const dfs = (cur_node,cards,to_find)=>{
+    if(cur_node===to_find){
+        return true
+    }
+    let ret = false
+
+    let next_nodes = getArrayFromSet(cards[cur_node].parent_of)
+
+    for(let i=0; i<next_nodes.length && !ret; i++){
+        ret = dfs(next_nodes[i],cards,to_find)
+    }
+
+    return ret
+}
+
+/*
+    used as a wrapper function to check if a link will create a cycle
+
+*/
+
+export const checkLinkValidity = (parent_node,child_node,cards)=>{
+    return !dfs(child_node,cards,parent_node)
 }
 
 /*
@@ -238,4 +311,21 @@ export const deleteLink = (parent_id,child_id,cards,setCards)=>{
             return newCards
         })
     }
+}
+
+/*
+    used to keep track of updated cards cords
+
+*/
+
+export const updateCardChange = (card_id,setUpdatedCards)=>{
+    if(isNullOrUndefined(card_id)) return false
+    
+    setUpdatedCards((prev)=>{
+        const newSet = new Set(prev)
+
+        newSet.add(card_id)
+
+        return newSet
+    })
 }

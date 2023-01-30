@@ -8,7 +8,8 @@ import { Controller } from './Controller'
 
 export const ActiveCardProvider = createContext()
 
-export const LineChartContainer = ( {wHeight,wWidth} ) => {
+const LineChartContainer = ( {wHeight,wWidth} ) => {
+  
 
   return (
     <div className={styles.container}>
@@ -22,3 +23,5 @@ export const LineChartContainer = ( {wHeight,wWidth} ) => {
     
   )
 }
+
+export default LineChartContainer

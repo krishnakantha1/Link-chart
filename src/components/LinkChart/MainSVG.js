@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import styles from './CSS/MainSVG.module.css'
 import { getMousePositionOnSVG, getArrayFromSet } from './Util/general_util'
-import { updateCordsForCard, getCardIDList, getCardWithID } from './Util/cards_util'
+import { updateCordsForCard, getCardIDList, getCardWithID, updateCardChange } from './Util/cards_util'
 import { resizeSVG } from './Util/svg_dim_util'
 import { calculateGMatrixForZoom, calculateGMatrixForTranslate } from './Util/gMatrix_util'
 
@@ -10,9 +10,10 @@ import { Line } from './Line'
 import { Card } from './Card'
 
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
+import { CardUpdateButton } from './CardUpdateButton'
 
 export const MainSVG = ({ wHeight, wWidth }) => {
-  const { cards, setCards, activeCard, setActiveCard, svgDim, setSvgDim, gMatrix, setGMatrix } = useContext(LinkChartContextProvider)
+  const { cards, setCards, activeCard, setActiveCard, svgDim, setSvgDim, gMatrix, setGMatrix, setUpdatedCards } = useContext(LinkChartContextProvider)
   
   const svgContainerRef = useRef(null)
 
@@ -55,6 +56,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
     //card move
     if(draggableState.draggble && draggableState.draggableElementId!==-1){
       const {x,y} = getMousePositionOnSVG(e,svg.current)
+      updateCardChange(draggableState.draggableElementId,setUpdatedCards)
       updateCordsForCard(draggableState.draggableElementId,x - draggableState.xdif,y - draggableState.ydif,setCards)
     }
 
@@ -108,6 +110,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
 
   return (
     <div ref={svgContainerRef} className={styles.container}>
+      <CardUpdateButton/>
       <svg 
         className={styles.SVGMain} height={svgDim.height} width={svgDim.width} 
         onDoubleClick = {(e)=>{ 
@@ -124,13 +127,14 @@ export const MainSVG = ({ wHeight, wWidth }) => {
           {
             getCardIDList(cards).map((card_id)=>{
               const card = getCardWithID(card_id,cards)
-
+              
               if(!card.parent_of){
                 return null
               }
 
               return getArrayFromSet(card.parent_of).map((child_id) => {
                 const child_card = getCardWithID(child_id,cards)
+                
                 return <Line 
                           key={`${card_id}_${child_id}`} 
                           x1={card.x} 

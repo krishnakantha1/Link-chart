@@ -3,7 +3,7 @@
     height: 10vh;
     display: flex;
     justify-content: space-between;
-    background-color: rgb(255, 252, 233);
+    background-color: var(--nav-background-color);
 }
 
 .container .appName{
@@ -13,6 +13,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color : var(--nav-text-color);
 }
 
 .container ul {
@@ -30,10 +31,12 @@
     font-weight: bold;
     padding: 10px 15px;
     color: black;
+    color : var(--nav-text-color);
 }
 
 .container ul li .link:hover{
-    background-color: rgb(255, 0, 0);
+    background-color: var(--nav-text-color);
     border-radius: 5px;
-    color: white;
+    color: var(--nav-background-color);
+
 }
