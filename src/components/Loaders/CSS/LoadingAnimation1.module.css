@@ -1,0 +1,31 @@
+.temp{
+    height : 10px;
+    position: relative;
+    background-color: var(--body-background-color);
+    overflow: hidden;
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.circle{
+    height:100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: var(--home-text-color);
+    position: absolute;
+    animation: circlemove 3s infinite cubic-bezier(0.31, 0.98, 1, 0.24);
+    animation-delay: calc(var(--i) * 0.5s);
+}
+
+@keyframes circlemove {
+    0%{
+        left : -10%;
+    }
+    100%{
+        left : 100%;
+    }
+}   

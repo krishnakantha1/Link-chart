@@ -1,0 +1,57 @@
+.inputText{
+    position: relative;
+    width: 90%;
+    margin: 15px 5%;
+    display: flex;
+    justify-content: center;
+}
+.inputText .labelHolder{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+}
+.inputText label{
+    position: absolute;
+    left : 10%;
+    top : 5px;
+    padding: 2px 5px;
+    background-color: transparent;
+    pointer-events: none;
+    color: rgba(145, 143, 143, 0.5);
+    transition: all 0.15s ease-out;
+}
+.inputText :is(input,textarea){
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    border-style: none;
+    outline: none;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(145, 143, 143, 0.5);
+    color: inherit;
+}
+
+.inputText textarea{
+    resize: vertical;
+    min-height: 50px;
+}
+
+.inputText:focus-within label, .inputText :is(input,textarea):valid + .labelHolder label{
+    top:-20px;
+}
+
+.inputText::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left:50%;
+    height: 1px;
+    transition: all 0.15s;
+    width: 0%;
+    background-color: rgb(0, 0, 0);
+}
+.inputText:focus-within:after{
+    left:0;
+    width: 100%;
+}

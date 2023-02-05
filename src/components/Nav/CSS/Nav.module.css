@@ -22,19 +22,20 @@
     justify-content: space-around;
     align-items: center;
     gap: 25px;
-    
+    padding-right: 15px;
 }
-.container ul li ,.container ul li .link{
+.container ul li, .container ul li .link{
     list-style: none;
     text-decoration: none;
     cursor: pointer;
     font-weight: bold;
-    padding: 10px 15px;
-    color: black;
     color : var(--nav-text-color);
 }
+.container ul li .link, .container ul .logout{
+    padding: 10px 15px;
+}
 
-.container ul li .link:hover{
+.container ul li .link:hover, .container ul li:hover{
     background-color: var(--nav-text-color);
     border-radius: 5px;
     color: var(--nav-background-color);

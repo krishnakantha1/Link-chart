@@ -1,0 +1,10 @@
+.container{
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--body-background-color);
+}
+h1{
+    color : var(--home-text-color);
+}

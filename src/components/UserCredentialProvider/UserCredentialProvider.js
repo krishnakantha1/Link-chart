@@ -1,9 +1,9 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useCallback, useState } from 'react'
 
 const initialUserState = {
-    user_name : "krishna5",
-    user_jwt : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJVU0VSX2tyaXNobmE1I0JnSERqREJEQmpGYWkiLCJ1c2VybmFtZSI6ImtyaXNobmE1IiwiZW1haWwiOiJrcmlzaG5hM0BnbWFpbCIsInBhc3N3b3JkIjoiMTIzNDVAIiwiaWF0IjoxNjc0Mzc3MzkyfQ.ZAjKn26WssJanaj__yDQlLtFKykrszkCW__-_-eg0nw",
-    logged_in : true
+    user_name : null,
+    user_jwt : null,
+    logged_in : false
 }
 
 export const UserCredentialContextProvider = createContext(initialUserState)
@@ -11,17 +11,21 @@ export const UserCredentialContextProvider = createContext(initialUserState)
 export const UserCredentialProvider = ({ children }) => {
     const [userDetails,setUserDetails] = useState(initialUserState)
 
-    const loggin = (user_name,user_jwt)=>{
+    const loggin = useCallback((user_name,user_jwt)=>{
+        localStorage.setItem('cred',user_jwt)
+
         setUserDetails({
             user_name,
             user_jwt,
             logged_in : true
         })
-    }
+    },[setUserDetails])
 
-    const logout = ()=>{
+    const logout = useCallback(()=>{
+        localStorage.removeItem('cred')
         setUserDetails(initialUserState)
-    }
+        //setUserDetails({user_name : null, user_jwt : null, logged_in : null })
+    },[setUserDetails])
 
   return (
     <UserCredentialContextProvider.Provider value={{

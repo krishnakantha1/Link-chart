@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 import styles from './CSS/Controller.module.css'
-import { createCard, createChildCard, getCardWithID, deleteCard, deleteLink } from './Util/cards_util'
+import { createCard, createChildCard, getCardWithID, deleteCard, deleteLink, deleteCardChange } from './Util/cards_util'
 import {  getArrayFromSet } from './Util/general_util'
 
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
@@ -83,7 +83,7 @@ const CreateNewCard = ()=>{
 //display extended card info for card with id card_id
 const CardInfo = ({ card_id })=>{
   const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
-  const { cards, setCards, svgDim, gMatrix, setActiveCard } = useContext(LinkChartContextProvider)
+  const { cards, setCards, svgDim, gMatrix, setActiveCard, updatedCards, setUpdatedCards } = useContext(LinkChartContextProvider)
   const { chart_id } = useParams()
 
   const [cardDetail,setCardDetail] = useState(initialCardDetails)
@@ -143,6 +143,7 @@ const CardInfo = ({ card_id })=>{
       console.log(message)
     }else{
       deleteCard(card_id,setCards)
+      deleteCardChange(card_id,updatedCards,setUpdatedCards)
       setActiveCard("-1")
     }
   }
@@ -196,7 +197,7 @@ const SimpleCard = ({ card_id,childCard,parent_id })=>{
       })
 
       const { error, message } = resp.data
-      console.log(resp.data)
+      
       if(error){
         console.log(message)
       }else{

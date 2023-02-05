@@ -1,0 +1,38 @@
+.container{
+    background-color: var(--form-background-color);
+    padding: 30px 10px;
+    border-radius: 5px;
+}
+
+.container h1{
+    text-align: center;
+    color: var(--nav-text-color);
+}
+
+.inputContainer{
+    position: relative;
+    width : max(30dvw,300px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--home-text-color);
+    margin : 10px 0;
+}
+
+.inputContainer button{
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-style: none;
+    outline: none;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    font-weight: bolder;
+    background-color: rgb(215, 215, 215);
+}
+.errorContainer{
+    margin: 10px 0;
+}
+.errorContainer p{
+    font-weight: bolder;
+    color : red;
+}

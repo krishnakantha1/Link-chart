@@ -72,6 +72,8 @@ export const MainSVG = ({ wHeight, wWidth }) => {
 
   //stop dragging
   const stopDragging = (e)=>{
+    if(!draggableState.draggble) return
+    
     setDraggableState(prev=>(
       {
         ...prev,
@@ -139,7 +141,6 @@ export const MainSVG = ({ wHeight, wWidth }) => {
                 const child_card = getCardWithID(child_id,cards)
 
                 const offset = (i - childern_count/2)+1
-                console.log(childern_count,offset)
                 
                 return <Line 
                           key={`${card_id}_${child_id}`} 

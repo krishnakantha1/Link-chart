@@ -316,8 +316,9 @@ export const deleteLink = (parent_id,child_id,cards,setCards)=>{
 /*
     used to keep track of updated cards cords
 
+    card_id : string
+    setUpdateCards : react state setter
 */
-
 export const updateCardChange = (card_id,setUpdatedCards)=>{
     if(isNullOrUndefined(card_id)) return false
     
@@ -328,4 +329,28 @@ export const updateCardChange = (card_id,setUpdatedCards)=>{
 
         return newSet
     })
+}
+
+/*
+    used to delete card entries in updatedCards state if it exists.
+
+    card_id : string
+    updatedCards : react state
+    setUpdatedCards : react state setter
+*/
+export const deleteCardChange = (card_id,updatedCards,setUpdatedCards)=>{
+    if(isNullOrUndefined(card_id)) return false
+    if(isNullOrUndefined(updatedCards)) return false
+
+    if(!updatedCards.has(card_id)) return false
+
+    setUpdatedCards((prev)=>{
+        const newSet = new Set(prev)
+
+        newSet.delete(card_id)
+
+        return newSet
+    })
+
+    return true
 }

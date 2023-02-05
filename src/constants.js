@@ -22,3 +22,9 @@ export const updateCards = "/api/cards/"
 export const createLink = "/api/links/"
 
 export const deleteLink = "/api/links/"
+
+//login
+export const loginPath = '/api/login'
+
+//register
+export const registerPath = '/api/register'
