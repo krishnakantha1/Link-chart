@@ -11,6 +11,9 @@ export const Nav = () => {
 
   const [displayConfirmPrompt, setDisplayConfirmPrompt] = useState(false)
 
+  //hamburger state
+  const [selected,setSelected] = useState(false)
+
   const handleConfirmation = (intent)=>{
     if(intent){
       logout()
@@ -22,14 +25,24 @@ export const Nav = () => {
     setDisplayConfirmPrompt(true)
   }
 
+  const offHandler = (e)=>{
+    setSelected(false)
+  }
+
   return (
     <>
     <div className={styles.container}>
         <div className={styles.appName}>
             <h1>Planit</h1>
         </div>
-        <nav>
-            <ul>
+        <div className={`${styles.hamburger} ${selected?styles.selected:null}`}
+        onClick={(e)=> {setSelected(prev=>!prev)} }>
+          <div className={styles.exterior}></div>
+          <div className={styles.interior}></div>
+          <div className={styles.exterior}></div>
+        </div>
+        <nav className={selected? styles.selected : null}>
+            <ul onClick={offHandler}>
             <li><Link className={styles.link} to='/'>Home</Link></li>
             <li><Link className={styles.link} to='/linkchart'>Link Chart</Link></li>
             {

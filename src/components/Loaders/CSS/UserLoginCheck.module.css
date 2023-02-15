@@ -7,4 +7,5 @@
 }
 h1{
     color : var(--home-text-color);
+    text-align: center;
 }

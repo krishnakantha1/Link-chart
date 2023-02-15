@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -6,6 +6,7 @@ import { host, getUserCharts, createChart, deleteChart as dc } from '../../const
 import deleteIcon from './Media/delete.png'
 import styles from './CSS/LinkChartList.module.css'
 import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
+import { LoadingAnimationCard } from '../Loaders/LoadingAnimationCard'
 
 
 const LinkChartList = () => {
@@ -14,6 +15,8 @@ const LinkChartList = () => {
   const goto = useCallback((id)=>{
     navigate(`/linkchart/${id}`)
   },[navigate])
+
+  const [loading,setLoading] = useState(false)
 
   const [chartData,setChartData] = useState("")
 
@@ -63,6 +66,7 @@ const LinkChartList = () => {
 
   useEffect(()=>{
      const fetchData = async ()=>{
+      setLoading(true)
       try{
         const resp = await axios({
           method : "post",
@@ -75,6 +79,7 @@ const LinkChartList = () => {
 
         const { data : { error } } = resp
 
+        setLoading(false)
         if(error){
           console.log(resp.data.message)
         }else{
@@ -87,7 +92,7 @@ const LinkChartList = () => {
       }
      }
      fetchData()
-  },[user_jwt])
+  },[user_jwt,setLoading])
 
   const deleteChart = async (chart_id)=>{
 
@@ -125,9 +130,20 @@ const LinkChartList = () => {
     }catch(e){
       console.log(e)
     }
-
-    
   }
+
+  const loaders = useMemo(()=>{
+    const res = []
+    
+    for(let i=0;i<3;i++){
+      res.push(
+        <div className={styles.loaderContainer}>
+          <LoadingAnimationCard/>
+        </div>
+      )
+    }
+    return res
+  },[])
 
   return (
     <div className={styles.container}>
@@ -146,6 +162,12 @@ const LinkChartList = () => {
         </div>
         <div className={styles.chartList}>
           {
+            loading ?
+
+            loaders
+
+            :
+
             userCharts.map(({chart_id,chart_name,chart_creation_date})=>(
               <ChartListItem 
                 key={chart_id} 
