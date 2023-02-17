@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'
+import React, { createContext, useRef } from 'react'
 
 import styles from './CSS/LineChartContainer.module.css'
 
@@ -8,16 +8,15 @@ import { Controller } from './Controller'
 
 export const ActiveCardProvider = createContext()
 
-const LineChartContainer = ( {wHeight,wWidth} ) => {
-  
+const LineChartContainer = () => {
+  const svgContainerRef = useRef()
 
   return (
     <div className={styles.container}>
       <LinkChartCentralProvider>
           <MainSVG 
-            wHeight={wHeight} 
-            wWidth={wWidth} />
-          <Controller/>
+            ref={svgContainerRef} />
+          <Controller svgDim={svgContainerRef}/>
       </LinkChartCentralProvider>
     </div>
     

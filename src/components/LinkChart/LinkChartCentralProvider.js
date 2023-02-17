@@ -37,10 +37,6 @@ export const LinkChartCentralProvider = ({children}) => {
     */
     const [cards,setCards] = useState({})
 
-    //main SVG size [height, width]
-    //initialy set to 0 but will be imediatly set to svg container div height and width
-    const [svgDim,setSvgDim] = useState({height : 0, width : 0})
-
     /*
         group transform parameter [a,b,c,d,e,f] 
         where a,d for scaling : used for zooming
@@ -92,8 +88,6 @@ export const LinkChartCentralProvider = ({children}) => {
         <LinkChartContextProvider.Provider value={{
             cards,
             setCards,
-            svgDim,
-            setSvgDim,
             gMatrix,
             setGMatrix,
             activeCard,

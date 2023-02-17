@@ -1,6 +1,6 @@
 .container{
     position: relative;
-    height: 10vh;
+    height: 10dvh;
     display: flex;
     justify-content: space-between;
     background-color: var(--nav-background-color);

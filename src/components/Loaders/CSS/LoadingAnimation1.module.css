@@ -13,14 +13,48 @@
 
 .circle{
     height:100%;
+    transform: scale(0,0);
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     background-color: var(--home-text-color);
     position: absolute;
-    animation: circlemove 3s infinite cubic-bezier(0.31, 0.98, 1, 0.24);
-    animation-delay: calc(var(--i) * 0.5s);
+    /* animation: circlemove1 5s infinite cubic-bezier(0.31, 0.98, 1, 0.24); */
+    animation: circlemove1 3s infinite ease-in-out;
+    animation-delay: calc(var(--i) * 0.75s);
 }
 
+@keyframes circlemove1{
+    0%{
+        
+        left : 0;
+    }
+    20%{
+        transform: scale(100%,100%);
+        left :0;
+    }
+    40%{
+        transform: scale(100%,100%);
+        left: 33%; 
+    }
+    60%{
+        transform: scale(100%,100%);
+        left: 66%
+    }
+    80%{
+        transform: scale(100%,100%);
+        left : 98%;
+    }
+    100%{
+        transform: scale(0,0);
+    }
+
+
+}
+
+/*
+    1   2  3  4  5
+    20  20 20 20 20
+*/
 @keyframes circlemove {
     0%{
         left : -10%;

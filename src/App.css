@@ -17,6 +17,7 @@
 
 body{
   background-color: var(--body-background-color);
+  overscroll-behavior: none;
 }
 
 /* width */

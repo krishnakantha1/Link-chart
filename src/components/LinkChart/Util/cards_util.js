@@ -354,3 +354,18 @@ export const deleteCardChange = (card_id,updatedCards,setUpdatedCards)=>{
 
     return true
 }
+
+/*
+
+*/
+export const isHighlightable = (card, selected_cardid)=>{
+    if(isNullOrUndefined(card)) return false
+    if(isNullOrUndefined(selected_cardid)) return false
+
+    if(selected_cardid===-1) return true
+    if(card.card_id===selected_cardid) return true
+    if(card.parent_of.has(selected_cardid)) return true
+    if(card.child_of.has(selected_cardid)) return true
+    
+    return false
+}

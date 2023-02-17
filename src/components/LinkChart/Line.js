@@ -4,13 +4,13 @@ import { makePath } from './Util/general_util'
 
 
 
-export const Line = ({x1,y1,x2,y2}) => {
+export const Line = ({ x1, y1, x2, y2 }) => {
   const a = makePath(x1+100,y1+50,x2+100,y2+50)
   
   return (
     <g>   
         <path 
-        stroke="rgb(249, 160, 63)" strokeWidth="3" fill="none"
+        stroke='rgb(249, 160, 63)' strokeWidth="3" fill="none"
         d={`
             M ${a[0].x},${a[0].y}
             L ${a[1].x},${a[1].y}

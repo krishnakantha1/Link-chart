@@ -1,6 +1,7 @@
- //"http://localhost:5000"
- //"https://planit-backend.onrender.com"
- export const host = "https://planit-backend.onrender.com"
+ const local = "http://localhost:5000"
+ const remote = "https://planit-backend.onrender.com"
+ const isRemote = false
+ export const host = isRemote ? remote : local
 
 //charts
 export const getUserCharts = "/api/linkchart/get-chart"

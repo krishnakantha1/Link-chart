@@ -14,7 +14,7 @@ import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCre
 const initialCardDetails = {title:'',description:''}
 
 //main controller
-export const Controller = () => {
+export const Controller = ({ svgDim }) => {
   const { activeCard } = useContext(LinkChartContextProvider)
 
   return (
@@ -22,16 +22,16 @@ export const Controller = () => {
       <div>
         <h1>{activeCard==="-1"?"Create A Card":"Card Details"}</h1>
       </div>
-      {activeCard==="-1" && (<CreateNewCard />)}
-      {activeCard!=="-1" && (<CardInfo card_id={activeCard}/>)}
+      {activeCard==="-1" && (<CreateNewCard svgDim={svgDim} />)}
+      {activeCard!=="-1" && (<CardInfo card_id={activeCard} svgDim={svgDim}/>)}
     </div>
   )
 }
 
 //wrapper to create a new card
-const CreateNewCard = ()=>{
+const CreateNewCard = ({ svgDim })=>{
   const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
-  const { setCards, svgDim, gMatrix } = useContext(LinkChartContextProvider)
+  const { setCards, gMatrix } = useContext(LinkChartContextProvider)
 
   const { chart_id } = useParams()
 
@@ -47,8 +47,11 @@ const CreateNewCard = ()=>{
     e.preventDefault()
     if(cardDetail.title==='' || cardDetail.description==='') return
 
-    const cx = ((svgDim.width)/2 - gMatrix[4])/gMatrix[0]
-    const cy = ((svgDim.height)/2 - gMatrix[5])/gMatrix[3]
+    const xtemp = svgDim.current.getBoundingClientRect().right - svgDim.current.getBoundingClientRect().left
+    const ytemp = svgDim.current.getBoundingClientRect().bottom - svgDim.current.getBoundingClientRect().top
+
+    const cx = ((xtemp)/2 - gMatrix[4])/gMatrix[0]
+    const cy = ((ytemp)/2 - gMatrix[5])/gMatrix[3]
 
     const resp = await axios({
       method : "POST",
@@ -81,9 +84,9 @@ const CreateNewCard = ()=>{
 }
 
 //display extended card info for card with id card_id
-const CardInfo = ({ card_id })=>{
+const CardInfo = ({ card_id, svgDim })=>{
   const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
-  const { cards, setCards, svgDim, gMatrix, setActiveCard, updatedCards, setUpdatedCards } = useContext(LinkChartContextProvider)
+  const { cards, setCards, gMatrix, setActiveCard, updatedCards, setUpdatedCards } = useContext(LinkChartContextProvider)
   const { chart_id } = useParams()
 
   const [cardDetail,setCardDetail] = useState(initialCardDetails)
@@ -99,8 +102,11 @@ const CardInfo = ({ card_id })=>{
     e.preventDefault()
     if(cardDetail.title==='' || cardDetail.description==='') return
 
-    const cx = ((svgDim.width)/2 - gMatrix[4])/gMatrix[0]
-    const cy = ((svgDim.height)/2 - gMatrix[5])/gMatrix[3]
+    const xtemp = svgDim.current.getBoundingClientRect().right - svgDim.current.getBoundingClientRect().left
+    const ytemp = svgDim.current.getBoundingClientRect().bottom - svgDim.current.getBoundingClientRect().top
+
+    const cx = ((xtemp)/2 - gMatrix[4])/gMatrix[0]
+    const cy = ((ytemp)/2 - gMatrix[5])/gMatrix[3]
 
     const resp = await axios({
       method : "POST",

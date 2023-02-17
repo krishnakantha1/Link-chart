@@ -2,12 +2,18 @@
     Has all generic helper functions.
 */
 
-export const isNullOrUndefined = (val)=>{
+export const isNullOrUndefined = (val)=>{  
     if(val===null || val===undefined) return true
     return false
 }
 
 export const getMousePositionOnSVG = (e,svg)=>{
+    //touch adapter
+    if(e.touches){
+        e.clientX = e.touches[0].pageX
+        e.clientY = e.touches[0].pageY
+    }
+
     const ctm = svg.getScreenCTM()
     return {
       x : (e.clientX - ctm.e)/ctm.a,

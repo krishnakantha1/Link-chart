@@ -137,8 +137,8 @@ const LinkChartList = () => {
     
     for(let i=0;i<3;i++){
       res.push(
-        <div className={styles.loaderContainer}>
-          <LoadingAnimationCard/>
+        <div className={styles.loaderContainer} key={i}>
+          <LoadingAnimationCard />
         </div>
       )
     }

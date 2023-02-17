@@ -12,13 +12,13 @@ import { host, createLink } from '../../constants'
 import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
 
 
-export const Card = ({x,y,title,description,card_id,startDragging}) => {
+export const Card = ({x, y, title, description, card_id, startDragging }) => {
   const { cards, setCards, setActiveCard } = useContext(LinkChartContextProvider)
   const { user_jwt } = useContext(UserCredentialContextProvider).userDetails
   const { chart_id } = useParams()
 
     const handleMouseDown = (e)=>{
-        e.preventDefault()
+        //e.preventDefault()
         e.stopPropagation()
         
         startDragging(card_id,e)
@@ -67,6 +67,7 @@ export const Card = ({x,y,title,description,card_id,startDragging}) => {
     <g transform={`translate(${x},${y})`}>
     <foreignObject  
       height="100" width= "200" 
+       onTouchStart={handleMouseDown}
       onMouseDown={handleMouseDown} 
       onDoubleClick={handleDoubleClick}
       onDrop={handleOnDrop}

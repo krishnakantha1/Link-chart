@@ -1,7 +1,13 @@
 .container{
     position: relative;
-    height: 90vh;
-    width: 100vw;
+    height: 90dvh;
+    width: 100dvw;
     display: flex;
     overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+    .container{
+        flex-direction: column;
+    }
 }

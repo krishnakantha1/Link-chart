@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState, forwardRef } from 'react'
 
 import styles from './CSS/MainSVG.module.css'
 import { getMousePositionOnSVG, getArrayFromSet } from './Util/general_util'
 import { updateCordsForCard, getCardIDList, getCardWithID, updateCardChange } from './Util/cards_util'
-import { resizeSVG } from './Util/svg_dim_util'
 import { calculateGMatrixForZoom, calculateGMatrixForTranslate } from './Util/gMatrix_util'
 
 import { Line } from './Line'
@@ -12,14 +11,10 @@ import { Card } from './Card'
 import { LinkChartContextProvider } from './LinkChartCentralProvider'
 import { CardUpdateButton } from './CardUpdateButton'
 
-export const MainSVG = ({ wHeight, wWidth }) => {
-  const { cards, setCards, activeCard, setActiveCard, svgDim, setSvgDim, gMatrix, setGMatrix, setUpdatedCards } = useContext(LinkChartContextProvider)
+export const MainSVG = forwardRef((_,svgContainerRef) => {
+  const { cards, setCards, activeCard, setActiveCard, gMatrix, setGMatrix, setUpdatedCards } = useContext(LinkChartContextProvider)
   
-  const svgContainerRef = useRef(null)
-
-  useEffect(()=>{
-    resizeSVG(svgContainerRef,setSvgDim)
-  },[wHeight,wWidth,setSvgDim])
+  //const svgContainerRef = useRef(null)
   
   //draggable info
   const [draggableState,setDraggableState] = useState({
@@ -51,8 +46,8 @@ export const MainSVG = ({ wHeight, wWidth }) => {
 
   //perform drag if possible
   const tryDragging = (e)=>{
-    e.preventDefault()
-
+    //e.preventDefault()
+    e.stopPropagation()
     //card move
     if(draggableState.draggble && draggableState.draggableElementId!==-1){
       const {x,y} = getMousePositionOnSVG(e,svg.current)
@@ -90,7 +85,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
   }
 
   const translate = (e)=>{
-    
+    e.stopPropagation()
     setDraggableState((prev)=>{
       const {x,y} = getMousePositionOnSVG(e,svg.current)
       let temp = svg.current.getScreenCTM()
@@ -114,21 +109,27 @@ export const MainSVG = ({ wHeight, wWidth }) => {
     <div ref={svgContainerRef} className={styles.container}>
       <CardUpdateButton/>
       <svg 
-        className={styles.SVGMain} height={svgDim.height} width={svgDim.width} 
+        className={styles.SVGMain} 
+        
         onDoubleClick = {(e)=>{ 
           if(activeCard==="-1") return
           setActiveCard("-1")
          }}
+         onTouchStart={translate}
+         onTouchMove={tryDragging}
+         onTouchEnd={stopDragging}
         onMouseDown={translate}
         onMouseMove={tryDragging}
         onMouseUp={stopDragging}
         onMouseLeave={stopDragging}
         onWheel={zoom}
+        
       >
         <g ref={svg} transform={`matrix(${gMatrix.join(" ")})`}>
           {
             getCardIDList(cards).map((card_id)=>{
               const card = getCardWithID(card_id,cards)
+              
               
               if(!card.parent_of){
                 return null
@@ -139,7 +140,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
 
               return getArrayFromSet(card.parent_of).map((child_id,i) => {
                 const child_card = getCardWithID(child_id,cards)
-
+                
                 const offset = (i - childern_count/2)+1
                 
                 return <Line 
@@ -155,6 +156,7 @@ export const MainSVG = ({ wHeight, wWidth }) => {
           {
             getCardIDList(cards).map((card_id)=>{
               const card = getCardWithID(card_id,cards)
+              
               return <Card 
                 key={card_id} 
                 x={card.x} 
@@ -170,4 +172,4 @@ export const MainSVG = ({ wHeight, wWidth }) => {
       </svg>
     </div>
   )
-}
+})
