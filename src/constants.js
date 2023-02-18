@@ -1,6 +1,6 @@
  const local = "http://localhost:5000"
  const remote = "https://planit-backend.onrender.com"
- const isRemote = false
+ const isRemote = true
  export const host = isRemote ? remote : local
 
 //charts
