@@ -4,11 +4,14 @@ import axios from 'axios'
 import { InputText1 } from '../GeneralUtil/InputText1'
 import { host, registerPath } from '../../constants'
 import { UserCredentialContextProvider } from '../UserCredentialProvider/UserCredentialProvider'
+import { LoadingAnimation1 } from '../Loaders/LoadingAnimation1'
 import styles from './CSS/Common.module.css'
+
 
 export const Register = () => {
   const { loggin } = useContext(UserCredentialContextProvider)
   const [entry,setEntry] = useState({ username : '', email : '', password : '', repassword : '' })
+  const [loading,setLoading] = useState(false)
 
   const handleChange = (e)=>{
     setEntry(prev=>{
@@ -19,6 +22,7 @@ export const Register = () => {
   const handleSubmit = async (e)=>{
     e.preventDefault()
     try{
+      setLoading(true)
       const resp = await axios({
         url : `${host}${registerPath}`,
         method : 'POST',
@@ -29,7 +33,7 @@ export const Register = () => {
           password : entry.password
         }
       })
-
+      setLoading(false)
       const { error, message } = resp.data
       if(error){
         console.log(message)
@@ -65,6 +69,16 @@ export const Register = () => {
       <div className={styles.errorContainer}>
         <p></p>
       </div>
+      {
+        loading && (
+          <div className={styles.loader}>
+            <div className={styles.loader_innercontainer}>
+              <LoadingAnimation1/>
+            </div>
+          </div>
+        )
+      }
+      
     </div>
   )
 }

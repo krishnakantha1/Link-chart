@@ -1,7 +1,8 @@
 .temp{
     height : 10px;
     position: relative;
-    background-color: var(--body-background-color);
+    /* background-color: var(--body-background-color); */
+    background-color: transparent;
     overflow: hidden;
 }
 
@@ -42,7 +43,7 @@
     }
     80%{
         transform: scale(100%,100%);
-        left : 98%;
+        left : 96%;
     }
     100%{
         transform: scale(0,0);

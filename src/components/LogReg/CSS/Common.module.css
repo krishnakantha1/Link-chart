@@ -2,6 +2,7 @@
     background-color: var(--form-background-color);
     padding: 30px 10px;
     border-radius: 5px;
+    position: relative;
 }
 
 .container h1{
@@ -35,4 +36,22 @@
 .errorContainer p{
     font-weight: bolder;
     color : red;
+}
+
+.container .loader{
+    position: absolute;
+    top :0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .loader .loader_innercontainer{
+    position: relative;
+    width: 80%;
 }
